@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 虚拟环境
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 密钥文件（重要！）
+config/api_keys.yaml
+
+# 输出文件（体积大，不建议提交）
+01_novel_generation/output/
+02_script_writer/output/
+03_storyboard/output/
+04_video_generation/output/
+05_post_production/output/
+06_metadata/records/
+
+# 日志文件
+logs/*.log
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 测试文件
+test_*.py

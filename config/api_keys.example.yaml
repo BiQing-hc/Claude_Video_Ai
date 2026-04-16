@@ -1,0 +1,20 @@
+# API 密钥配置
+# 复制此文件为 api_keys.yaml 并填入你的真实密钥
+# 切勿将 api_keys.yaml 提交到 Git！
+
+# 大模型 API
+llm:
+  claude_api_key: "YOUR_ANTHROPIC_API_KEY"
+  deepseek_api_key: "YOUR_DEEPSEEK_API_KEY"
+  openai_api_key: "YOUR_OPENAI_API_KEY"
+
+# 视频生成 API
+video:
+  kling_api_key: "YOUR_KLING_API_KEY"
+  jimeng_api_key: "YOUR_JIMENG_API_KEY"
+  runway_api_key: "YOUR_RUNWAY_API_KEY"
+
+# 其他服务
+services:
+  elevenlabs_api_key: "YOUR_ELEVENLABS_API_KEY"  # TTS 配音
+  stability_api_key: "YOUR_STABILITY_API_KEY"    # 生图
