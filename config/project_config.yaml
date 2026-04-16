@@ -1,0 +1,58 @@
+# 项目配置文件
+
+# 大模型 API 配置
+llm:
+  # 使用阿里云百炼（通义千问）
+  provider: "bailian"
+  bailian_api_key: "${BAILIAN_API_KEY}"
+  base_url: "https://coding.dashscope.aliyuncs.com/v1"
+  model: "qwen-plus"
+  max_tokens: 8192
+
+# 视频生成工具配置
+video_tools:
+  kling:  # 可灵
+    enabled: false
+    api_key: "${KLING_API_KEY}"
+    endpoint: "https://api.klingai.com/v1"
+    default_params:
+      duration: 5
+      ratio: "16:9"
+      quality: "high"
+    retry:
+      max_attempts: 3
+      delay_seconds: 10
+
+  jimeng:  # 即梦
+    enabled: false
+    api_key: "${JIMENG_API_KEY}"
+    endpoint: "https://api.jimeng.ai/v1"
+    default_params:
+      duration: 5
+      ratio: "16:9"
+    retry:
+      max_attempts: 3
+      delay_seconds: 10
+
+# 项目默认配置
+project:
+  default_season: 1
+  episodes_per_season: 20
+  seconds_per_episode: 90
+  shots_per_episode: 25
+
+# 输出路径配置
+paths:
+  novels: "01_novel_generation/output/novels"
+  scripts: "02_script_writer/output/scripts"
+  storyboards: "03_storyboard/output"
+  raw_videos: "04_video_generation/output/raw_videos"
+  final_videos: "05_post_production/output/final_videos"
+  records: "06_metadata/records"
+  ref_images: "assets/ref_images"
+  logs: "logs"
+
+# 并发控制
+concurrency:
+  max_video_generation_tasks: 5
+  max_api_requests_per_minute: 30

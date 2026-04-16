@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 视频生成一人公司 - Claude Video AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Main Content */
+        .main-content {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin-top: -30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        /* Features Grid */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 25px;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .feature-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .feature-card li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .feature-card li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        /* Workflow Section */
+        .workflow {
+            margin: 40px 0;
+        }
+
+        .workflow h2 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+
+        .workflow-steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .step {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .step-text {
+            font-size: 0.9rem;
+            text-align: center;
+            color: #333;
+        }
+
+        /* Demo Section */
+        .demo-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 40px 0;
+        }
+
+        .demo-section h2 {
+            margin-bottom: 20px;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .demo-item {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .demo-item h4 {
+            margin-bottom: 10px;
+        }
+
+        .demo-item p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* CTA Button */
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease;
+            margin: 20px 10px 20px 0;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+        }
+
+        .cta-button.secondary {
+            background: white;
+            color: #667eea;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: white;
+            opacity: 0.8;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Code Block */
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+        }
+
+        .code-block .command {
+            color: #569cd6;
+        }
+
+        .code-block .comment {
+            color: #6a9955;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>🎬 AI 视频生成一人公司</h1>
+            <p>从小说到视频 · 全流程自动化生成</p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">Powered by Claude & Alibaba Qwen</p>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Introduction -->
+            <section>
+                <h2 style="color: #667eea; margin-bottom: 20px;">项目介绍</h2>
+                <p style="font-size: 1.1rem; line-height: 1.8;">
+                    这是一个完整的 AI 视频生成系统，可以自动化完成从<strong>小说创作</strong>到<strong>视频生成</strong>的全流程。
+                    只需输入一个创意，系统就能自动生成小说、改编脚本、生成分镜提示词，最终通过 AI 视频工具生成完整的短剧视频。
+                </p>
+
+                <div style="margin: 30px 0;">
+                    <a href="https://github.com/BiQing-hc/Claude_Video_Ai" class="cta-button" target="_blank">
+                        ⭐ 在 GitHub 上查看
+                    </a>
+                    <a href="#demo" class="cta-button secondary">
+                        📺 查看示例
+                    </a>
+                </div>
+            </section>
+
+            <!-- Features -->
+            <section class="features">
+                <div class="feature-card">
+                    <h3>📝 小说生成</h3>
+                    <ul>
+                        <li>自动生成世界观设定</li>
+                        <li>创建修炼体系和势力</li>
+                        <li>生成主线剧情大纲</li>
+                        <li>撰写详细章节内容（每章 2000+ 字）</li>
+                        <li>支持玄幻/都市/悬疑等题材</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3>🎬 脚本改编</h3>
+                    <ul>
+                        <li>小说自动改编短剧脚本</li>
+                        <li>每集 90 秒，15-25 个镜头</li>
+                        <li>包含详细分镜描述</li>
+                        <li>自动生成 AI 视频提示词</li>
+                        <li>支持批量生成</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3>🤖 视频生成</h3>
+                    <ul>
+                        <li>支持可灵 AI/即梦 AI</li>
+                        <li>一键生成所有镜头</li>
+                        <li>自动下载和整理视频</li>
+                        <li>后期合成支持</li>
+                        <li>添加配音和字幕</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Workflow -->
+            <section class="workflow">
+                <h2>工作流程</h2>
+                <div class="workflow-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-text">输入<br/>创意</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-text">生成<br/>小说</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-text">改编<br/>脚本</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-text">生成<br/>提示词</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-text">AI 生成<br/>视频</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">6</div>
+                        <div class="step-text">后期<br/>发布</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Demo Section -->
+            <section class="demo-section" id="demo">
+                <h2>📺 示例作品：《九天神帝》</h2>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <h4>小说进度</h4>
+                        <p>已完成第 1-10 章<br/>约 20,000 字</p>
+                    </div>
+                    <div class="demo-item">
+                        <h4>短剧脚本</h4>
+                        <p>已完成 5 集<br/>共 35 个镜头</p>
+                    </div>
+                    <div class="demo-item">
+                        <h4>题材类型</h4>
+                        <p>玄幻/修仙<br/>热血爽文</p>
+                    </div>
+                    <div class="demo-item">
+                        <h4>主角设定</h4>
+                        <p>陆辰 · 16 岁<br/>神帝传承人</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Start -->
+            <section>
+                <h2 style="color: #667eea; margin-bottom: 20px;">快速开始</h2>
+                <div class="code-block">
+                    <div class="comment"># 安装依赖</div>
+                    <div><span class="command">pip</span> install -r requirements.txt</div>
+                    <br>
+                    <div class="comment"># 配置 API 密钥（编辑 config/api_keys.yaml）</div>
+                    <br>
+                    <div class="comment"># 一键生成小说 + 脚本 + 提示词</div>
+                    <div><span class="command">python</span> auto_pipeline.py --title <span style="color: #ce9178;">"我的小说"</span> --episodes <span style="color: #b5cea8;">5</span></div>
+                </div>
+            </section>
+
+            <!-- Links -->
+            <section style="margin: 40px 0; padding: 30px; background: #f5f7fa; border-radius: 10px;">
+                <h3 style="margin-bottom: 20px;">📚 文档链接</h3>
+                <ul style="list-style: none;">
+                    <li style="padding: 10px 0;">
+                        <a href="https://github.com/BiQing-hc/Claude_Video_Ai/blob/main/README.md" style="color: #667eea; text-decoration: none;">
+                            📖 README.md - 项目说明
+                        </a>
+                    </li>
+                    <li style="padding: 10px 0;">
+                        <a href="https://github.com/BiQing-hc/Claude_Video_Ai/blob/main/AUTOMATION_GUIDE.md" style="color: #667eea; text-decoration: none;">
+                            🤖 AUTOMATION_GUIDE.md - 自动化指南
+                        </a>
+                    </li>
+                    <li style="padding: 10px 0;">
+                        <a href="https://github.com/BiQing-hc/Claude_Video_Ai/blob/main/QUICKSTART.md" style="color: #667eea; text-decoration: none;">
+                            🚀 QUICKSTART.md - 快速开始
+                        </a>
+                    </li>
+                    <li style="padding: 10px 0;">
+                        <a href="https://github.com/BiQing-hc/Claude_Video_Ai/blob/main/PROJECT_SUMMARY_九天神帝.md" style="color: #667eea; text-decoration: none;">
+                            📊 PROJECT_SUMMARY.md - 项目总结
+                        </a>
+                    </li>
+                </ul>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>Created with ❤️ by BiQing-hc</p>
+            <p style="margin-top: 10px;">
+                <a href="https://github.com/BiQing-hc/Claude_Video_Ai" target="_blank">GitHub</a> ·
+                <a href="https://klingai.kuaishou.com/" target="_blank">可灵 AI</a> ·
+                <a href="https://jimeng.douyin.com/" target="_blank">即梦 AI</a>
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
