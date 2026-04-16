@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>灵墟纪 - 在线阅读</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #1a0a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+        }
+
+        /* 导航栏 */
+        .navbar {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: #a5b4fc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 15px;
+        }
+
+        .nav-links a:hover {
+            color: #fbbf24;
+        }
+
+        /* 阅读容器 */
+        .reading-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* 小说标题区 */
+        .novel-header {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .novel-title {
+            font-size: clamp(36px, 6vw, 64px);
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b, #ef4444);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.1em;
+        }
+
+        .novel-meta {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .meta-tag {
+            background: rgba(168, 85, 247, 0.2);
+            color: #a855f7;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+        }
+
+        .novel-description {
+            color: #a5b4fc;
+            line-height: 1.8;
+            margin-top: 25px;
+            font-size: 16px;
+        }
+
+        /* 章节导航 */
+        .chapter-nav {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chapter-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+        }
+
+        .chapter-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #a5b4fc;
+            padding: 12px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .chapter-btn:hover {
+            background: rgba(168, 85, 247, 0.2);
+            border-color: rgba(168, 85, 247, 0.5);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .chapter-btn.active {
+            background: linear-gradient(135deg, #a855f7, #6366f1);
+            border-color: transparent;
+            color: #fff;
+        }
+
+        /* 章节内容 */
+        .chapter-content {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .chapter-title {
+            font-size: clamp(24px, 4vw, 36px);
+            color: #fbbf24;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(168, 85, 247, 0.3);
+        }
+
+        .chapter-text {
+            font-size: 18px;
+            line-height: 2;
+            color: #e0e0e0;
+            text-align: justify;
+        }
+
+        .chapter-text p {
+            margin-bottom: 25px;
+            text-indent: 2em;
+        }
+
+        .chapter-text .dialogue {
+            color: #fbbf24;
+            font-style: italic;
+        }
+
+        /* 章节切换按钮 */
+        .chapter-navigation {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(168, 85, 247, 0.2);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            color: #a855f7;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 15px;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            background: rgba(168, 85, 247, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* 阅读设置 */
+        .reading-settings {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 10px;
+            z-index: 50;
+        }
+
+        .setting-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a855f7, #6366f1);
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);
+        }
+
+        .setting-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* 字体大小面板 */
+        .font-size-panel {
+            position: fixed;
+            bottom: 90px;
+            right: 30px;
+            background: rgba(30, 30, 50, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            display: none;
+            z-index: 50;
+        }
+
+        .font-size-panel.show {
+            display: block;
+        }
+
+        .font-size-panel h4 {
+            color: #a855f7;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .font-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .font-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .font-btn:hover {
+            background: rgba(168, 85, 247, 0.3);
+        }
+
+        .font-btn.active {
+            background: linear-gradient(135deg, #a855f7, #6366f1);
+        }
+
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 60px;
+        }
+
+        .footer a {
+            color: #a855f7;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .reading-container {
+                padding: 20px 15px;
+            }
+
+            .chapter-content {
+                padding: 25px 15px;
+            }
+
+            .chapter-text {
+                font-size: 16px;
+            }
+
+            .nav-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .chapter-navigation {
+                flex-direction: column;
+            }
+
+            .nav-btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="index.html" class="nav-logo">灵墟纪</a>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="#chapters">章节目录</a>
+                <a href="#about">关于</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 阅读容器 -->
+    <div class="reading-container">
+        <!-- 小说标题区 -->
+        <header class="novel-header">
+            <h1 class="novel-title">灵墟纪</h1>
+            <div class="novel-meta">
+                <span class="meta-tag">玄幻</span>
+                <span class="meta-tag">修仙</span>
+                <span class="meta-tag">热血</span>
+                <span class="meta-tag">连载</span>
+            </div>
+            <p class="novel-description">
+                千年前天崩之战后，仙界崩塌，灵墟现世。少年陆离手持神秘玉佩，踏上寻找父亲的修仙之路。
+                灵墟令现世，各方势力蠢蠢欲动，一场足以改变整个灵墟界的风暴正在酝酿...
+            </p>
+        </header>
+
+        <!-- 章节导航 -->
+        <section id="chapters" class="chapter-nav">
+            <h3 style="color: #fbbf24; margin-bottom: 15px;">章节目录</h3>
+            <div class="chapter-list">
+                <a href="#chapter1" class="chapter-btn active">第 1 章 血月异象</a>
+                <a href="#chapter2" class="chapter-btn">第 2 章 秘境入口</a>
+                <a href="#chapter3" class="chapter-btn">第 3 章 黑衣人伏击</a>
+                <a href="#chapter4" class="chapter-btn">第 4 章 圣女遇险</a>
+                <a href="#chapter5" class="chapter-btn">第 5 章 灵墟传承</a>
+            </div>
+        </section>
+
+        <!-- 第 1 章 -->
+        <article id="chapter1" class="chapter-content">
+            <h2 class="chapter-title">第 1 章 血月异象</h2>
+            <div class="chapter-text">
+                <p>青阳镇，陆家后山。</p>
+                <p>夜色如墨，一轮血月悬挂天际，将整个大地染成诡异的暗红色。</p>
+                <p>陆离盘膝坐在一块青石上，手中紧握着一枚黑色玉佩。玉佩温润如玉，表面刻着古老的纹路，那些纹路仿佛是某种古老的符文，在月光下泛着诡异的光芒。</p>
+                <p class="dialogue">"父亲，你到底在哪里..."</p>
+                <p>陆离喃喃自语，声音中带着一丝苦涩。</p>
+                <p>三年前，他的父亲陆天行进入灵墟秘境后便杳无音信。有人说他陨落在秘境中，尸骨无存；也有人说他得到了惊天传承，独自飞升了。</p>
+                <p>但陆离不相信父亲会抛弃他。</p>
+                <p>母亲在他五岁那年便因病去世，临终前握着他的手，让他好好活着，等父亲回来。从那以后，他便一个人守着那座空荡荡的小院，日复一日，年复一年。</p>
+                <p>家族里的人都说他父亲死了，说他是个"不祥之人"，说他母亲就是被他克死的。那些冷嘲热讽，那些鄙夷的目光，他都一一记在心里。</p>
+                <p>但他从未放弃。</p>
+                <p>他每天天不亮就起来修炼，无论严寒酷暑，无论刮风下雨。他知道，只有自己变强，才能在这个弱肉强食的世界里生存下去，才能找到父亲。</p>
+                <p class="dialogue">"唉..."</p>
+                <p>陆离轻叹一声，睁开双眼。</p>
+                <p>他的眼眸深邃如夜空，眉宇间那道红色印记在血月的映照下显得格外醒目。这是他与生俱来的胎记，家族里的长老曾说这是"邪祟之兆"，但陆离不信。</p>
+                <p>他觉得，这或许是什么了不得的东西。</p>
+                <p>忽然，手中的黑色玉佩剧烈震动起来，一股温热的感觉从掌心传来。</p>
+                <p>陆离心中一惊，低头看去。</p>
+                <p>只见玉佩表面的古老纹路仿佛活过来一般，开始缓缓流转，一道猩红的光芒从玉佩中射出，直指北方天际。</p>
+                <p class="dialogue">"这是..."</p>
+                <p>陆离猛地站起身，心中掀起惊涛骇浪。</p>
+                <p>这枚玉佩是父亲留给他的唯一遗物，三年来一直毫无反应，今晚怎么会突然异变？</p>
+                <p>他顺着玉佩光芒的方向望去，只见北方天空中，原本漆黑的夜幕被一道金色光柱撕裂。那光柱粗如山岳，冲天而起，将整个夜空照得如同白昼。</p>
+                <p>光柱周围，空间仿佛被扭曲了，形成一个个诡异的漩涡。无数道色彩斑斓的能量从漩涡中涌出，汇入光柱之中。</p>
+                <p>"轰隆隆！"</p>
+                <p>天空中传来阵阵雷鸣，那声音不像是普通的雷声，倒像是某种古老的存在在苏醒。</p>
+                <p class="dialogue">"灵墟秘境开启了！"</p>
+                <p class="dialogue">"天啊，这么大的动静，难道是千年一遇的'大秘境'？"</p>
+                <p class="dialogue">"快！赶紧通知宗门！"</p>
+                <p class="dialogue">"这种机缘，绝对不能错过！"</p>
+                <p>青阳镇内，无数道身影冲天而起，朝着北方疾驰而去。有身穿道袍的老者，有手持长剑的青年，有周身环绕着诡异黑气的中年人...</p>
+                <p>这些人，都是修炼者。</p>
+                <p>陆离握紧玉佩，眼中闪过一丝决然。</p>
+                <p class="dialogue">"父亲，我一定会找到你的。"</p>
+                <p class="dialogue">"无论你在哪里，无论发生了什么，我都会找到你。"</p>
+                <p>陆离深吸一口气，脚尖一点青石，身形如离弦之箭般朝着北方掠去。</p>
+                <p>就在他离开后不久，一道苍老的身影出现在后山。</p>
+                <p>那是一个蓬头垢面的老者，衣衫褴褛，手中提着一个破旧的酒葫芦。他就这样随随便便地站在那里，却给人一种深不可测的感觉。</p>
+                <p>老疯子望着陆离离去的方向，嘴角勾起一抹意味深长的笑容。</p>
+                <p class="dialogue">"灵墟令...终于现世了么..."</p>
+                <p class="dialogue">"陆天行啊陆天行，你当年把那东西交给自己的儿子，到底是明智还是愚蠢呢..."</p>
+                <p class="dialogue">"不过，这天...怕是要变了。"</p>
+                <p>老疯子灌了一口酒，身形一晃，凭空消失在原地。</p>
+            </div>
+            <div class="chapter-navigation">
+                <span class="nav-btn disabled">← 上一章</span>
+                <a href="#chapter2" class="nav-btn">下一章 →</a>
+            </div>
+        </article>
+
+        <!-- 第 2 章 -->
+        <article id="chapter2" class="chapter-content">
+            <h2 class="chapter-title">第 2 章 秘境入口</h2>
+            <div class="chapter-text">
+                <p>次日清晨，陆离终于赶到了灵墟秘境的入口处。</p>
+                <p>眼前的景象，让他倒吸一口凉气。</p>
+                <p>只见一座巨大的山谷前，黑压压地聚集了数千人。这些人穿着各异，有身穿统一服饰的宗门弟子，有独来独往的散修，有三五成群的小团伙...</p>
+                <p>每个人都气息不凡，最弱的也是炼气期，强的甚至达到了金丹期。</p>
+                <p class="dialogue">"这就是灵墟秘境么..."</p>
+                <p>陆离站在远处，望着山谷入口。</p>
+                <p>那是一座巨大的石门，高约百丈，宽约五十丈，门上刻满了古老的符文。此刻，石门正散发着淡淡的金色光芒，形成一个巨大的光门。</p>
+                <p>光门内，隐约可以看到另一番天地。</p>
+                <p>那里有悬浮在空中的山岳，有奔流不息的灵脉，有散发着古老气息的宫殿...</p>
+                <p class="dialogue">"让开！"</p>
+                <p>忽然，一道大喝声从身后传来。</p>
+                <p>陆离下意识地闪身避开，只见一群身穿紫色道袍的人从他身边掠过，径直朝秘境入口飞去。</p>
+                <p class="dialogue">"那不是陆家的废物陆离吗？也敢来这种地方？"</p>
+                <p>一道讥讽的声音传来，陆离眉头微皱，停下脚步，转身看去。</p>
+                <p>只见一个锦衣青年带着几个跟班走来，正是赵家少主赵天霸。</p>
+                <p>赵天霸身穿金丝锦袍，手持一把玉骨折扇，面容阴鸷，眼神中带着浓浓的轻蔑。他身后跟着四个黑衣壮汉，个个气息彪悍，都是炼气六层以上的修为。</p>
+                <p class="dialogue">"赵天霸。" 陆离淡淡开口。</p>
+                <p class="dialogue">"哼，知道本少的名字就赶紧滚，" 赵天霸冷笑一声，收起折扇，"这种地方可不是你这种炼气三层的废物能来的。进去了也是送死，别给陆家丢人了。"</p>
+                <p>周围传来阵阵哄笑。</p>
+                <p>陆离眼神微冷，没有理会。</p>
+                <p class="dialogue">"小子，我跟你说话呢！"</p>
+                <p>见陆离不搭理自己，赵天霸脸色一沉，猛地一掌拍向陆离。</p>
+                <p>这一掌，他用了七成功力，掌风呼啸，隐隐有血色光芒闪烁。</p>
+                <p>陆离瞳孔一缩，下意识后退，手中玉佩再次发热。</p>
+                <p class="dialogue">"住手。"</p>
+                <p>就在此时，一道清冷的声音响起。</p>
+                <p>声音不大，却仿佛带着某种威严，让在场所有人都安静了下来。</p>
+                <p>一名白衣女子从天而降，轻飘飘地落在陆离身前。</p>
+                <p>她身穿一尘不染的白衣，长发如瀑布般垂到腰间，眉心有一点朱砂痣，面容绝美，却带着生人勿近的冰冷。</p>
+                <p class="dialogue">"苏清雪？" 赵天霸脸色一变，"青云宗圣女？"</p>
+                <p class="dialogue">"灵墟秘境禁止私斗，违者逐出秘境。" 苏清雪淡淡道，声音清冷如冰。</p>
+                <p class="dialogue">"哼，算你小子走运。不过进了秘境，可没人护得住你。"</p>
+                <p>说完，他带着人离开。</p>
+                <p>陆离看向苏清雪，拱了拱手：</p>
+                <p class="dialogue">"多谢。"</p>
+                <p>苏清雪转身，目光在陆离身上停留了一瞬，最后落在他紧握玉佩的手上。</p>
+                <p class="dialogue">"你身上的气息...有些特别。" 她轻声道，"小心活着出来。"</p>
+                <p>说完，她身形一闪，化作一道白光，进入秘境。</p>
+                <p>陆离深吸一口气，迈步走向秘境入口。</p>
+                <p>穿过光门的那一刻，陆离感觉整个人仿佛被什么东西扫过了一遍。</p>
+                <p>下一秒，他出现在了一片古老的森林中。</p>
+            </div>
+            <div class="chapter-navigation">
+                <a href="#chapter1" class="nav-btn">← 上一章</a>
+                <a href="#chapter3" class="nav-btn">下一章 →</a>
+            </div>
+        </article>
+
+        <!-- 第 3 章 -->
+        <article id="chapter3" class="chapter-content">
+            <h2 class="chapter-title">第 3 章 黑衣人伏击</h2>
+            <div class="chapter-text">
+                <p>秘境之内，危机四伏。</p>
+                <p>古木参天，灵气浓郁得几乎化雾。阳光透过层层叠叠的树叶，洒下斑驳的光影。</p>
+                <p>陆离小心翼翼地前行，时刻警惕着周围的动静。</p>
+                <p>他进入秘境已经两个时辰了，这两个时辰里，他遇到了三次妖兽袭击，两次修士伏击。好在都侥幸躲过，没有受伤。</p>
+                <p>但陆离知道，真正的危险，还在后面。</p>
+                <p>忽然，前方传来一阵窸窣声。</p>
+                <p class="dialogue">"有人！"</p>
+                <p>陆离心中一凛，停下脚步，躲在一棵大树后朝前望去。</p>
+                <p>只见三名身穿黑衣的蒙面人从树后走出，呈三角形状将他包围。</p>
+                <p class="dialogue">"小子，出来吧。" 为首的黑衣人冷声道，"我们知道你在那里。"</p>
+                <p>陆离握紧长剑，从树后走出。</p>
+                <p class="dialogue">"劫财的？" 陆离冷笑，"你们确定选对了目标？"</p>
+                <p class="dialogue">"识相的就把储物袋交出来，我们可以留你一条狗命。" 为首的黑衣人冷声道。</p>
+                <p class="dialogue">"储物袋没有，命一条，要不要？" 陆离握紧长剑。</p>
+                <p class="dialogue">"敬酒不吃吃罚酒！"</p>
+                <p>为首的黑衣人脸色一沉，挥手道，"上！"</p>
+                <p>三名黑衣人同时扑了上来。</p>
+                <p>陆离咬紧牙关，挥剑迎战。</p>
+                <p>"铛！铛！铛！"</p>
+                <p>兵器相交，火星四溅。</p>
+                <p>陆离的实力虽然不如对方，但他打法悍不畏死，招招拼命，一时间竟也和三人打得有来有回。</p>
+                <p class="dialogue">"妈的，这小子是个疯子！"</p>
+                <p class="dialogue">"别跟他耗，速战速决！"</p>
+                <p>三名黑衣人交换了一个眼神，攻势陡然变猛。</p>
+                <p>陆离渐渐不敌，身上多了几道伤口。</p>
+                <p class="dialogue">"完了么..."</p>
+                <p>陆离心中闪过一丝不甘。</p>
+                <p>他还没有找到父亲，他还没有弄清楚玉佩的秘密...</p>
+                <p class="dialogue">"不！"</p>
+                <p class="dialogue">"我不能死在这里！"</p>
+                <p>陆离怒吼一声，胸前的玉佩再次发光。</p>
+                <p>"轰！"</p>
+                <p>一股恐怖的力量从他体内爆发开来，三名黑衣人如同断线风筝般倒飞而出，重重地摔在地上。</p>
+                <p class="dialogue">"这...这是什么力量？！"</p>
+                <p>为首的黑衣人惊恐地看着陆离。</p>
+                <p>陆离自己也愣住了。</p>
+                <p>刚才那股力量，仿佛来自他的灵魂深处，古老而威严。</p>
+                <p class="dialogue">"走！"</p>
+                <p>他趁机转身，朝密林深处掠去。</p>
+                <p class="dialogue">"别追了！" 为首的黑衣人从地上爬起来，脸色阴沉，"那小子身上有古怪，不是我们能对付的。"</p>
+                <p class="dialogue">"那怎么办？"</p>
+                <p class="dialogue">"通知少主，就说...灵墟令现世了。"</p>
+            </div>
+            <div class="chapter-navigation">
+                <a href="#chapter2" class="nav-btn">← 上一章</a>
+                <a href="#chapter4" class="nav-btn">下一章 →</a>
+            </div>
+        </article>
+
+        <!-- 第 4 章 -->
+        <article id="chapter4" class="chapter-content">
+            <h2 class="chapter-title">第 4 章 圣女遇险</h2>
+            <div class="chapter-text">
+                <p>陆离一路狂奔，直到确认没有人追来，才停下脚步。</p>
+                <p>他靠在一棵大树上，大口喘着粗气。</p>
+                <p class="dialogue">"刚才那股力量...到底是什么？"</p>
+                <p>陆离低头看着胸前的玉佩，玉佩已经恢复了平静，仿佛刚才的一切都是幻觉。</p>
+                <p>但他知道，那不是幻觉。</p>
+                <p>前方传来一阵打斗声。</p>
+                <p class="dialogue">"救命！"</p>
+                <p>那是一个女子的声音，声音中带着焦急和痛苦。</p>
+                <p>陆离皱了皱眉。</p>
+                <p>这个声音，他好像在哪里听过。</p>
+                <p class="dialogue">"苏清雪？"</p>
+                <p>陆离心中一动，站起身，朝着声音方向掠去。</p>
+                <p>穿过一片密林，眼前的景象让他瞳孔一缩。</p>
+                <p>只见一片空地上，三名黑衣人正在围攻一名白衣女子。</p>
+                <p>女子正是苏清雪。</p>
+                <p>但此刻的苏清雪，已经没有了之前的清冷从容。她身上多处负伤，白衣被鲜血染红，脸色苍白，呼吸急促。</p>
+                <p class="dialogue">"冰灵圣体的血肉，献给少主定能让他突破！" 一名黑衣人狞笑。</p>
+                <p class="dialogue">"休想！"</p>
+                <p>苏清雪咬牙，手中长剑挥舞，一道冰蓝色的剑气横扫而出。</p>
+                <p>"砰！"</p>
+                <p>剑气击中一名黑衣人，但那黑衣人只是后退了几步，毫发无损。</p>
+                <p class="dialogue">"筑基六层？哼，若不是你之前和一头妖兽激战受了伤，我们三人还真不是你的对手。" 为首的黑衣人冷笑，"但现在，你已经是瓮中之鳖了。"</p>
+                <p class="dialogue">"上！速战速决！"</p>
+                <p>三人再次扑了上去。</p>
+                <p>苏清雪节节败退，眼看就要支撑不住。</p>
+                <p class="dialogue">"住手！"</p>
+                <p>就在此时，一道大喝声传来。</p>
+                <p>陆离从密林中冲出，手中长剑直指三名黑衣人。</p>
+                <p class="dialogue">"又来一个找死的？" 为首的黑衣人转头看向陆离，眼中闪过一丝轻蔑，"炼气三层？哼，一起解决了！"</p>
+                <p>两名黑衣人脱离战圈，朝陆离扑来。</p>
+                <p>陆离握紧长剑，眼中闪过一丝狠厉。</p>
+                <p class="dialogue">"来得好！"</p>
+                <p>他身形一闪，竟主动迎了上去。</p>
+                <p>"铛！铛！"</p>
+                <p>火星四溅，陆离虎口震裂，但硬生生挡下了两人的攻击。</p>
+                <p class="dialogue">"小子的灵力...不对劲！" 一名黑衣人脸色大变。</p>
+                <p>陆离的灵力中，竟带着一丝古老而威严的气息，让他们感到一种发自内心的恐惧。</p>
+                <p class="dialogue">"杀了他！"</p>
+                <p>为首的黑衣人见状，不再保留，全力出手。</p>
+                <p>三人同时发力，陆离节节败退，身上多处受伤。</p>
+                <p class="dialogue">"小子，受死吧！"</p>
+                <p>为首的黑衣人举起长刀，朝陆离头顶劈下。</p>
+                <p>就在此时，陆离胸前的玉佩再次发光。</p>
+                <p>"轰！"</p>
+                <p>一股恐怖的力量爆发开来，三名黑衣人同时倒飞而出，口吐鲜血。</p>
+                <p class="dialogue">"灵墟令！这是灵墟令的力量！" 一人惊恐地大喊。</p>
+                <p>苏清雪也愣住了，美眸中满是震惊。</p>
+                <p>陆离自己也有些茫然，刚才那股力量仿佛来自他的灵魂深处，不受他控制。</p>
+                <p class="dialogue">"走！"</p>
+                <p>他拉起苏清雪，趁着三名黑衣人还在震惊中，转身逃入密林。</p>
+            </div>
+            <div class="chapter-navigation">
+                <a href="#chapter3" class="nav-btn">← 上一章</a>
+                <a href="#chapter5" class="nav-btn">下一章 →</a>
+            </div>
+        </article>
+
+        <!-- 第 5 章 -->
+        <article id="chapter5" class="chapter-content">
+            <h2 class="chapter-title">第 5 章 灵墟传承</h2>
+            <div class="chapter-text">
+                <p>两人逃到一处山洞，暂时安全。</p>
+                <p class="dialogue">"你的玉佩...是灵墟令？" 苏清雪问道。</p>
+                <p>陆离沉默片刻，点了点头。</p>
+                <p class="dialogue">"传说灵墟令可以掌控所有秘境，没想到是真的。" 苏清雪神色复杂，"这件事，千万不要告诉任何人。"</p>
+                <p class="dialogue">"我知道。" 陆离苦笑，"刚才那三人应该已经知道了。"</p>
+                <p class="dialogue">"他们活不了。" 苏清雪冷冷道，"但我担心的是，消息会传出去。"</p>
+                <p>两人陷入沉默。</p>
+                <p>就在此时，山洞深处传来一阵波动。</p>
+                <p class="dialogue">"这是..."</p>
+                <p>陆离和苏清雪对视一眼，同时朝山洞深处走去。</p>
+                <p>穿过一条狭窄的通道，眼前豁然开朗。</p>
+                <p>这是一个巨大的石室，石室中央，悬浮着一座古老的祭坛。</p>
+                <p>祭坛之上，悬浮着一枚古朴的令牌。</p>
+                <p>那令牌通体呈黑色，表面刻满了古老的符文，和陆离手中的玉佩一模一样。</p>
+                <p class="dialogue">"灵墟令...完整的灵墟令！"</p>
+                <p>陆离心中一震。</p>
+                <p>他手中的玉佩，竟然不受控制地飞出，朝祭坛上的令牌飞去。</p>
+                <p class="dialogue">"等等！"</p>
+                <p>陆离想要阻止，但已经来不及了。</p>
+                <p>两块令牌在空中相遇，瞬间融合在一起。</p>
+                <p>"轰！"</p>
+                <p>一道刺目的光芒爆发开来，陆离和苏清雪同时被震退数步。</p>
+                <p>光芒散去后，祭坛上的令牌已经消失了。</p>
+                <p class="dialogue">"这是怎么回事？" 苏清雪震惊。</p>
+                <p>陆离抬起手，只见那块完整的灵墟令，正静静地悬浮在他的掌心上方。</p>
+                <p class="dialogue">"它...认我为主了？"</p>
+                <p>就在此时，一股庞大的信息涌入他的脑海。</p>
+                <p class="dialogue">"吾乃灵墟之主，今留此传承，待有缘人得之。"</p>
+                <p class="dialogue">"灵墟令，可开万墟，可镇诸天。"</p>
+                <p class="dialogue">"得令者，当承吾志，守护此界，抵抗域外天魔..."</p>
+                <p class="dialogue">"吾之传承，乃'灵墟决'，修炼至大成，可破碎虚空，飞升成仙..."</p>
+                <p class="dialogue">"孩子，你若能看到这段留言，说明你与我灵墟一脉有缘。"</p>
+                <p class="dialogue">"记住，你的父亲陆天行，还活着。他在'天墟'等你，那里是灵墟界最危险的地方，也是...唯一能阻挡域外天魔的地方。"</p>
+                <p class="dialogue">"去吧，孩子。时间不多了..."</p>
+                <p>信息到这里戛然而止。</p>
+                <p>陆离缓缓睁开眼，眼中闪过一丝金色光芒。</p>
+                <p class="dialogue">"父亲...他还活着。"</p>
+                <p class="dialogue">"什么？" 苏清雪震惊。</p>
+                <p class="dialogue">"他还活着，在某个地方等我。" 陆离坚定道，"我要找到他。"</p>
+                <p>苏清雪看着陆离，沉默片刻，轻声道：</p>
+                <p class="dialogue">"我陪你一起去。"</p>
+                <p>陆离转头看向她，两人相视一笑。</p>
+                <p>山洞外，风云涌动。</p>
+                <p>灵墟令现世的消息，已经传遍天下。</p>
+                <p>各大势力蠢蠢欲动，一场足以改变整个灵墟界的风暴，正在酝酿。</p>
+                <p>远山之上，老疯子望着山洞方向，灌了一口酒。</p>
+                <p class="dialogue">"天要变了啊..."</p>
+                <p style="text-align: center; margin-top: 40px; color: #6b7280;">（第 1-5 章 完）</p>
+            </div>
+            <div class="chapter-navigation">
+                <a href="#chapter4" class="nav-btn">← 上一章</a>
+                <a href="index.html" class="nav-btn">返回首页 →</a>
+            </div>
+        </article>
+
+        <!-- 关于 -->
+        <section id="about" class="chapter-nav" style="margin-top: 40px;">
+            <h3 style="color: #fbbf24; margin-bottom: 20px;">关于本书</h3>
+            <p style="color: #a5b4fc; line-height: 1.8;">
+                《灵墟纪》是一部玄幻修仙题材的网络小说，讲述少年陆离寻找失踪父亲，意外获得灵墟令传承，
+                踏上修仙之路的故事。本书计划 2000 章，当前已连载 5 章。
+            </p>
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <p style="color: #6b7280; font-size: 14px;">
+                    本书由 AI 自动生成 · 使用 Claude + 阿里云百炼大模型
+                </p>
+            </div>
+        </section>
+    </div>
+
+    <!-- 阅读设置 -->
+    <div class="reading-settings">
+        <button class="setting-btn" onclick="toggleFontPanel()" title="字体大小">Aa</button>
+        <a href="#chapter1" class="setting-btn" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;" title="返回顶部">↑</a>
+    </div>
+
+    <!-- 字体大小面板 -->
+    <div id="fontPanel" class="font-size-panel">
+        <h4>字体大小</h4>
+        <div class="font-buttons">
+            <button class="font-btn" onclick="setFontSize(16)">小</button>
+            <button class="font-btn active" onclick="setFontSize(18)">中</button>
+            <button class="font-btn" onclick="setFontSize(20)">大</button>
+            <button class="font-btn" onclick="setFontSize(22)">特大</button>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <p>
+            <a href="index.html">灵墟纪首页</a> |
+            <a href="https://github.com/BiQing-hc/Claude_Video_Ai" target="_blank">GitHub 仓库</a>
+        </p>
+        <p style="margin-top: 10px; color: #6b7280; font-size: 14px;">
+            灵墟纪 © 2026 - AI 生成短剧项目
+        </p>
+    </footer>
+
+    <script>
+        // 字体大小切换
+        function setFontSize(size) {
+            const chapterText = document.querySelectorAll('.chapter-text');
+            chapterText.forEach(el => {
+                el.style.fontSize = size + 'px';
+            });
+
+            // 更新按钮状态
+            document.querySelectorAll('.font-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // 保存到 localStorage
+            localStorage.setItem('novelFontSize', size);
+        }
+
+        // 切换字体面板
+        function toggleFontPanel() {
+            const panel = document.getElementById('fontPanel');
+            panel.classList.toggle('show');
+        }
+
+        // 点击外部关闭面板
+        document.addEventListener('click', function(event) {
+            const panel = document.getElementById('fontPanel');
+            const btn = document.querySelector('.setting-btn');
+            if (panel && !panel.contains(event.target) && !btn.contains(event.target)) {
+                panel.classList.remove('show');
+            }
+        });
+
+        // 加载保存的字体大小
+        window.addEventListener('DOMContentLoaded', function() {
+            const savedSize = localStorage.getItem('novelFontSize') || 18;
+            setFontSize(parseInt(savedSize));
+        });
+
+        // 滚动高亮当前章节
+        window.addEventListener('scroll', function() {
+            const chapters = ['chapter1', 'chapter2', 'chapter3', 'chapter4', 'chapter5'];
+            const scrollPos = window.scrollY + 200;
+
+            chapters.forEach((chapter, index) => {
+                const el = document.getElementById(chapter);
+                if (el) {
+                    const top = el.offsetTop;
+                    const height = el.offsetHeight;
+                    if (scrollPos >= top && scrollPos < top + height) {
+                        document.querySelectorAll('.chapter-btn').forEach(btn => {
+                            btn.classList.remove('active');
+                        });
+                        document.querySelectorAll('.chapter-btn')[index].classList.add('active');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
