@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>灵墟纪 - 大型玄幻修仙短剧</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #1a0a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        /* 英雄区域 */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px 20px;
+            background:
+                radial-gradient(ellipse at top, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom, rgba(59, 130, 246, 0.2) 0%, transparent 50%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #a855f7, #6366f1);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);
+        }
+
+        .hero h1 {
+            font-size: clamp(48px, 8vw, 96px);
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b, #ef4444);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 60px rgba(251, 191, 36, 0.3);
+            letter-spacing: 0.1em;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(18px, 3vw, 24px);
+            color: #a5b4fc;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .hero-tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+
+        .hero-tag {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #a855f7, #6366f1);
+            color: white;
+            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(168, 85, 247, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* 故事简介 */
+        .story-section {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: clamp(32px, 5vw, 48px);
+            text-align: center;
+            margin-bottom: 60px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .story-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .story-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .story-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .story-card-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .story-card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #fbbf24;
+        }
+
+        .story-card p {
+            color: #a5b4fc;
+            line-height: 1.8;
+        }
+
+        /* 角色介绍 */
+        .characters-section {
+            padding: 100px 20px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .characters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .character-card {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(99, 102, 241, 0.1));
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .character-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 60px rgba(168, 85, 247, 0.3);
+        }
+
+        .character-image {
+            height: 300px;
+            background: linear-gradient(135deg, #1a0a2e, #2d1b4e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+        }
+
+        .character-info {
+            padding: 25px;
+        }
+
+        .character-name {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #fbbf24;
+        }
+
+        .character-role {
+            display: inline-block;
+            background: linear-gradient(135deg, #a855f7, #6366f1);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-bottom: 15px;
+        }
+
+        .character-desc {
+            color: #a5b4fc;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .character-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .stat {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 16px;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* 世界观 */
+        .world-section {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .world-content {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .world-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .world-item {
+            text-align: center;
+        }
+
+        .world-item-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .world-item h4 {
+            font-size: 20px;
+            color: #fbbf24;
+            margin-bottom: 10px;
+        }
+
+        .world-item p {
+            color: #a5b4fc;
+            line-height: 1.6;
+        }
+
+        /* 剧集列表 */
+        .episodes-section {
+            padding: 100px 20px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .episodes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .episode-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .episode-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(168, 85, 247, 0.3);
+        }
+
+        .episode-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #a855f7, #6366f1);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .episode-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #fbbf24;
+        }
+
+        .episode-desc {
+            color: #a5b4fc;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* 制作工具 */
+        .tools-section {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .tool-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tool-card h4 {
+            color: #a855f7;
+            margin-bottom: 10px;
+        }
+
+        .tool-card p {
+            color: #a5b4fc;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        /* 页脚 */
+        .footer {
+            padding: 40px 20px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .footer-links a {
+            color: #a5b4fc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #a855f7;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .hero {
+                min-height: auto;
+                padding: 40px 20px;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 280px;
+                text-align: center;
+            }
+        }
+
+        /* 浮动动画 */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- 英雄区域 -->
+    <section class="hero">
+        <div class="hero-content">
+            <span class="hero-badge">🎬 AI 生成短剧</span>
+            <h1>灵墟纪</h1>
+            <p class="hero-subtitle">
+                千年前天崩之战后，仙界崩塌，灵墟现世。<br>
+                少年陆离手持神秘玉佩，踏上寻找父亲的修仙之路。
+            </p>
+            <div class="hero-tags">
+                <span class="hero-tag">✨ 玄幻修仙</span>
+                <span class="hero-tag">⚔️ 灵墟传承</span>
+                <span class="hero-tag">🔮 上古神器</span>
+                <span class="hero-tag">💫 域外天魔</span>
+            </div>
+            <div class="cta-buttons">
+                <a href="#story" class="btn btn-primary">了解故事</a>
+                <a href="#episodes" class="btn btn-secondary">查看剧集</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 故事简介 -->
+    <section id="story" class="story-section">
+        <h2 class="section-title">故事简介</h2>
+        <div class="story-grid">
+            <div class="story-card">
+                <div class="story-card-icon">🌙</div>
+                <h3>血月异象</h3>
+                <p>三年前的一个血月之夜，陆离的父亲陆天行进入灵墟秘境后杳无音信。三年后，同样的血月再现，父亲留下的神秘玉佩突然异变...</p>
+            </div>
+            <div class="story-card">
+                <div class="story-card-icon">🗝️</div>
+                <h3>灵墟令现世</h3>
+                <p>传说灵墟令可以掌控所有秘境，镇守诸天。陆离手中的玉佩竟是灵墟令的碎片，融合后将获得上古灵墟之主的传承。</p>
+            </div>
+            <div class="story-card">
+                <div class="story-card-icon">⚔️</div>
+                <h3>各方势力</h3>
+                <p>天道宗、青云门、血魔宗...各大势力蠢蠢欲动。陆离如何在弱肉强食的世界中生存，找到父亲的下落？</p>
+            </div>
+            <div class="story-card">
+                <div class="story-card-icon">👥</div>
+                <h3>宿命相逢</h3>
+                <p>青云宗圣女苏清雪，身怀冰灵圣体。她与陆离的相遇，是偶然还是宿命？两人将如何携手面对即将到来的风暴？</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 角色介绍 -->
+    <section class="characters-section">
+        <h2 class="section-title">主要角色</h2>
+        <div class="characters-grid">
+            <!-- 陆离 -->
+            <div class="character-card">
+                <div class="character-image">⚔️</div>
+                <div class="character-info">
+                    <h3 class="character-name">陆离</h3>
+                    <span class="character-role">男主角</span>
+                    <p class="character-desc">青阳镇陆家族人，眉宇间有一道红色印记。母亲早逝，父亲在秘境中失踪。坚韧不拔，重情重义。</p>
+                    <div class="character-stats">
+                        <div class="stat">
+                            <div class="stat-label">年龄</div>
+                            <div class="stat-value">17 岁</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">修为</div>
+                            <div class="stat-value">炼气三层</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">武器</div>
+                            <div class="stat-value">灵墟令</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">功法</div>
+                            <div class="stat-value">灵墟决</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 苏清雪 -->
+            <div class="character-card">
+                <div class="character-image">❄️</div>
+                <div class="character-info">
+                    <h3 class="character-name">苏清雪</h3>
+                    <span class="character-role">女主角</span>
+                    <p class="character-desc">青云宗圣女，面容绝美，清冷出尘。眉心有一点朱砂痣，身怀冰灵圣体，天赋异禀。</p>
+                    <div class="character-stats">
+                        <div class="stat">
+                            <div class="stat-label">年龄</div>
+                            <div class="stat-value">18 岁</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">修为</div>
+                            <div class="stat-value">筑基六层</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">体质</div>
+                            <div class="stat-value">冰灵圣体</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">宗门</div>
+                            <div class="stat-value">青云宗</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 赵天霸 -->
+            <div class="character-card">
+                <div class="character-image">😈</div>
+                <div class="character-info">
+                    <h3 class="character-name">赵天霸</h3>
+                    <span class="character-role">反派</span>
+                    <p class="character-desc">赵家少主，身穿金丝锦袍，手持玉骨折扇。面容阴鸷，与陆家是死敌，多次针对陆离。</p>
+                    <div class="character-stats">
+                        <div class="stat">
+                            <div class="stat-label">年龄</div>
+                            <div class="stat-value">20 岁</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">修为</div>
+                            <div class="stat-value">炼气六层</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">身份</div>
+                            <div class="stat-value">赵家少主</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">阵营</div>
+                            <div class="stat-value">反派</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 老疯子 -->
+            <div class="character-card">
+                <div class="character-image">🍶</div>
+                <div class="character-info">
+                    <h3 class="character-name">老疯子</h3>
+                    <span class="character-role">神秘角色</span>
+                    <p class="character-desc">蓬头垢面的神秘老者，手持破旧酒葫芦。知道灵墟令的秘密，似乎与陆离的父亲有关。</p>
+                    <div class="character-stats">
+                        <div class="stat">
+                            <div class="stat-label">年龄</div>
+                            <div class="stat-value">未知</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">修为</div>
+                            <div class="stat-value">深不可测</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">武器</div>
+                            <div class="stat-value">酒葫芦</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">身份</div>
+                            <div class="stat-value">？？？</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 世界观 -->
+    <section class="world-section">
+        <h2 class="section-title">世界观设定</h2>
+        <div class="world-content">
+            <div class="world-grid">
+                <div class="world-item">
+                    <div class="world-item-icon">🌌</div>
+                    <h4>灵墟界</h4>
+                    <p>天地间漂浮着无数破碎的古大陆碎片，称为"灵墟"，每个灵墟都蕴含着上古仙人的传承</p>
+                </div>
+                <div class="world-item">
+                    <div class="world-item-icon">🧘</div>
+                    <h4>修炼体系</h4>
+                    <p>炼气→筑基→金丹→元婴→化神→渡劫→仙人，层层突破，方可飞升</p>
+                </div>
+                <div class="world-item">
+                    <div class="world-item-icon">⚔️</div>
+                    <h4>天崩之战</h4>
+                    <p>千年前仙界崩塌，无数仙人陨落，道统和法宝散落各处灵墟</p>
+                </div>
+                <div class="world-item">
+                    <div class="world-item-icon">👹</div>
+                    <h4>域外天魔</h4>
+                    <p>潜伏在虚空之外的恐怖存在，伺机入侵灵墟界，是灵墟之主毕生对抗的敌人</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 剧集列表 -->
+    <section id="episodes" class="episodes-section">
+        <h2 class="section-title">第一季 剧集</h2>
+        <div class="episodes-grid">
+            <div class="episode-card">
+                <span class="episode-number">S01E01</span>
+                <h3 class="episode-title">血月异象</h3>
+                <p class="episode-desc">血月之夜，玉佩异变。陆离发现父亲留下的玉佩竟能指引灵墟秘境的方向，他决定踏上寻找父亲的旅程。</p>
+            </div>
+            <div class="episode-card">
+                <span class="episode-number">S01E02</span>
+                <h3 class="episode-title">秘境入口</h3>
+                <p class="episode-desc">陆离抵达灵墟秘境入口，遭遇赵家少主赵天霸刁难。关键时刻，青云宗圣女苏清雪出手相救。</p>
+            </div>
+            <div class="episode-card">
+                <span class="episode-number">S01E03</span>
+                <h3 class="episode-title">生死一线</h3>
+                <p class="episode-desc">秘境之内危机四伏，陆离遭遇三名黑衣人伏击。生死关头，玉佩爆发出神秘力量击退敌人。</p>
+            </div>
+            <div class="episode-card">
+                <span class="episode-number">S01E04</span>
+                <h3 class="episode-title">灵墟传承</h3>
+                <p class="episode-desc">苏清雪遭黑衣人围攻，陆离挺身而出。两人逃入山洞，发现灵墟令完整传承，陆离融合令牌获得上古传承。</p>
+            </div>
+            <div class="episode-card">
+                <span class="episode-number">S01E05</span>
+                <h3 class="episode-title">风云再起</h3>
+                <p class="episode-desc">灵墟令现世的消息传遍天下，各大势力蠢蠢欲动。陆离得知父亲还活着，在天墟等他，一场更大的风暴即将降临。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 制作工具 -->
+    <section class="tools-section">
+        <h2 class="section-title">制作工具</h2>
+        <div class="tools-grid">
+            <div class="tool-card">
+                <h4>📝 小说生成</h4>
+                <p>使用 AI 大模型生成玄幻小说内容，构建完整的世界观和剧情线</p>
+            </div>
+            <div class="tool-card">
+                <h4>🎬 脚本改编</h4>
+                <p>将小说章节改编为 90 秒短剧脚本，包含详细分镜和对白</p>
+            </div>
+            <div class="tool-card">
+                <h4>🎨 提示词生成</h4>
+                <p>为每个镜头生成 AI 视频提示词，支持可灵、即梦、Runway 等工具</p>
+            </div>
+            <div class="tool-card">
+                <h4>🤖 自动化流程</h4>
+                <p>一键式 Python 脚本自动化处理从小说到视频的全流程</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <p>灵墟纪 © 2026 - AI 生成短剧项目</p>
+        <div class="footer-links">
+            <a href="https://github.com/BiQing-hc/Claude_Video_Ai" target="_blank">GitHub 仓库</a>
+            <a href="https://github.com/BiQing-hc/Claude_Video_Ai/tree/main/01_novel_generation/output/novels" target="_blank">阅读小说</a>
+            <a href="https://github.com/BiQing-hc/Claude_Video_Ai/tree/main/02_script_writer/output/scripts" target="_blank">查看脚本</a>
+        </div>
+    </footer>
+</body>
+</html>
